@@ -127,7 +127,7 @@ get '/braindead' do
 end
 
 get '/alive' do
-  "I'm doing science and I'm still alive (since #{startTime.inspect})"
+  "I'm doing science and I'm still alive (since #{start_time.inspect})"
 end
 
 get '/ready' do
