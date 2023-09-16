@@ -18,8 +18,8 @@ This is dedicated to my good friend Tim.
 
 ## Startup environment variables
 ### `READY_MODE`
-* "`normal`" (Default) : the ready endpoint responds with HTTP `200` after 30 seconds from app start
-* "`fast`" : the ready endpoint responds with HTTP `200` immediately
+* "`normal`" (Default) : the `/ready` endpoint responds with HTTP `200` after 30 seconds from app start
+* "`fast`" : the `/ready` endpoint responds with HTTP `200` immediately
 * "`never`" : the `/ready` endpoint always responds with HTTP `500`
 
 ### `CONSUMED_CPU_MODE`
