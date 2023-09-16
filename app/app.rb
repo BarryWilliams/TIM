@@ -5,10 +5,12 @@ start_time = Time.now
 $ready_mode           = ENV["READY_MODE"]           || "normal"
 $consumed_cpu_mode    = ENV["CONSUMED_CPU_MODE"]    || "minimal"
 $consumed_memory_mode = ENV["CONSUMED_MEMORY_MODE"] || "minimal"
+$html_bg_color        = ENV["HTML_BG_COLOR"]        || "white"
 
 puts "READY_MODE = #{$ready_mode}"
 puts "CONSUMED_CPU_MODE = #{$consumed_cpu_mode}"
 puts "CONSUMED_MEMORY_MODE = #{$consumed_memory_mode}"
+puts "HTML_BG_COLOR = #{$html_bg_color}"
 
 def startup
   full_cpu if $consumed_cpu_mode == "full"
@@ -77,7 +79,9 @@ end
 
 get '/' do
   br = "\n"
-  out = "<pre>"
+  out = ""
+  out << "<body style=\"background-color:#{$html_bg_color};\">"
+  out << "<pre>"
   out << " .----------------.  .----------------.  .----------------. " + br
   out << "| .--------------. || .--------------. || .--------------. |" + br
   out << "| |  _________   | || |     _____    | || | ____    ____ | |" + br

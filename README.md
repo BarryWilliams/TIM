@@ -30,3 +30,7 @@ This is dedicated to my friend Tim.
 ### `CONSUMED_MEMORY_MODE`
 * "`minimal`" (Default) : uses only needed RAM
 * "`unlimited`" : increases the amount of memory used indefinitely until OOM kill
+
+### `HTML_BG_COLOR`
+You can specify any HTML color. The default is `white`. See [HTML Color Names](https://www.w3schools.com/colors/colors_names.asp)
+
