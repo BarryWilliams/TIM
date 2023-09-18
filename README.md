@@ -1,4 +1,4 @@
-# TIMmy - Trouble-Inflicted MiniApp
+# TIMmy - Troublesome Interactive MiniApp
 An app that fails
 
 ## Uses
