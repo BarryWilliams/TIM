@@ -30,15 +30,19 @@ end
 
 def random_cpu
   puts 'doing random cpu usage'
-  granularity_seconds = 1 / 10
+  granularity_seconds = 1.00
+  min_cpu = 0.2
+  max_cpu = 0.6
   Thread.new do
     loop do
       t = Time.now.to_f
 
       Thread.new do
-        r = Random.rand * granularity_seconds
+        r = rand(min_cpu..max_cpu) * granularity_seconds
         while Time.now.to_f < t + r do
-          #no-op
+          for i in 1..100000 do
+            #noop
+          end
         end
       end
 
