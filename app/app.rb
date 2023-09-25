@@ -56,9 +56,12 @@ end
 def eat_memory
   puts "eating memory"
   Thread.new do
-    m = []
+    m = ["eat me"]
+    i = 0
     while true do
-      m.append 'munch!'
+      m[i] = 'munch!'
+      i = i + 100000 #about 225MB/min
+      sleep 0.05
     end
   end
 end
