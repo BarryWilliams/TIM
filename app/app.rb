@@ -106,6 +106,16 @@ def pre(s)
   return "<pre>" + s.to_s + "</pre>"
 end 
 
+def word_wrap(s)
+  return "
+<style>
+div {
+  word-wrap: break-word;
+}
+</style>
+<div>" + s.to_s + "</div>"
+end
+
 before do
   response.body << "<body style=\"background-color:#{$html_bg_color};\">"
   out = ""
@@ -178,6 +188,10 @@ get '/ready' do
     out = "<p style=\"color:red;font-size:300%;-webkit-text-stroke-width: 2px;-webkit-text-stroke-color: black;\">I'm not ready yet!!</p>"
   end
   response.body << (bold out)
+end
+
+get '/random-data' do
+  word_wrap((0..10000000).map { rand (0..10) }.join.to_s )
 end
 
 get '/threads' do
