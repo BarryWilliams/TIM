@@ -18,6 +18,19 @@ spec:
       containers:
       - name: tim-sample-app
         image: barrywilliams/tim-sample-app
+        imagePullPolicy: Always
+        env:
+        - name: HTML_BG_COLOR
+          value: LightGreen
+        - name: CONSUMED_CPU_MODE
+          value: random
+        resources: 
+          limits:
+            cpu: 1
+            memory: 1Gi
+          requests:
+            cpu: 500m
+            memory: 200Mi
         livenessProbe:
           failureThreshold: 10
           httpGet:

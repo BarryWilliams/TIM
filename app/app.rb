@@ -72,8 +72,9 @@ end
 def braindead
   puts "going braindead"
   Thread.new do
+    sleep 5
     Thread.list.each {|th|
-      if th.to_s.include? "reactor"
+      if th.to_s.include? "reactor" || th.to_s.include? "app.rb"
         puts "killing #{th.to_s}"
         th.kill
       end
@@ -147,6 +148,10 @@ get '/ready' do
     status 500
     "I'm not ready yet"
   end
+end
+
+after do
+
 end
 
 startup
