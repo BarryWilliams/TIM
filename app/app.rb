@@ -1,5 +1,7 @@
 require 'sinatra'
 
+$br = "\n"
+
 start_time = Time.now
 
 $ready_mode           = ENV["READY_MODE"]           || "normal"
@@ -54,9 +56,12 @@ end
 def eat_memory
   puts "eating memory"
   Thread.new do
-    m = []
+    m = ["eat me"]
+    i = 0
     while true do
-      m.append 'munch!'
+      m[i] = 'munch!'
+      i = i + 100000 #about 225MB/min
+      sleep 0.05
     end
   end
 end
@@ -82,11 +87,30 @@ def braindead
   end
 end
 
-get '/' do
-  br = "\n"
+# Formatting helpers
+
+def escape_html(s)
+  html_escape_table = {
+    '&' => '&amp;',
+    '"' => '&quot;',
+    "'" => '&#x27;',
+    '<' => '&lt;',
+    '>' => '&gt;'
+  }
+  return s.gsub(/[&"'<>]/, html_escape_table)
+end
+
+def bold(s)
+  return "<b>" + s.to_s + "</b>"
+end
+
+def pre(s)
+  return "<pre>" + s.to_s + "</pre>"
+end 
+
+before do
+  response.body << "<body style=\"background-color:#{$html_bg_color};\">"
   out = ""
-  out << "<body style=\"background-color:#{$html_bg_color};\">"
-  out << "<pre>"
   out << "
  .----------------.  .----------------.  .----------------.  .----------------.  .----------------. 
 | .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |
@@ -100,54 +124,86 @@ get '/' do
 | '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |
  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' 
 "
-  out << br
-  out << "$HOSTNAME = #{ENV["HOSTNAME"]}" + br
-  out << br
-  out << "AVAILABLE ROUTES" + br
+  out << $br
+  response.body << (bold pre escape_html out)
+end
 
-  Sinatra::Application.routes["GET"].each do |route|
-    out << route[0].to_s + br
+get '/' do
+  out = ""
+  out << "AVAILABLE ROUTES" + $br
+  Sinatra::Application.routes["GET"].each do |route| out << route[0].to_s + $br
   end
-  out << "</pre>"
-  out
+  response.body << (bold pre escape_html out)
 end
 
 get '/cpu' do
   random_cpu
-  'I feel crazy!'
+  out = bold "Let's do some work!"
+  response.body << out
 end
 
 get '/fullcpu' do
   full_cpu
-  'Ramp it up!'
+  out = bold 'FULL THROTTLE!'
+  response.body << out
 end
 
 get '/memory' do
   eat_memory
-  'munch munch munch'
+  out = bold 'Munch! Munch! Munch!'
+  response.body << out
 end
 
 get '/kill' do
   kill_me
-  'What a world! What a world!'
+  out = bold 'What a world! What a world!'
+  response.body << out
 end
 
 get '/braindead' do
   braindead
-  "I'm gone"
+  out = bold "The lights are on, but there's no one home."
+  response.body << out
 end
 
 get '/alive' do
-  "I'm doing science and I'm still alive (since #{start_time.inspect})"
+  out = bold "I'm doing science and I'm still alive (since #{start_time.inspect})"
+  response.body << out
 end
 
 get '/ready' do
+  out = ""
   if $ready_mode == "fast" || start_time < Time.now - 30 && $ready_mode != "never"
-    'Thunder cats are go!'
+    out = 'Thunder cats are go!'
   else
     status 500
-    "I'm not ready yet"
+    out = "<p style=\"color:red;font-size:300%;-webkit-text-stroke-width: 2px;-webkit-text-stroke-color: black;\">I'm not ready yet!!</p>"
   end
+  response.body << (bold out)
+end
+
+get '/threads' do
+  out = ""
+  Thread.list.each {|th| out << escape_html(th.to_s) + $br}
+  response.body << (pre out)
+end
+
+after do
+  out = ""
+  out << $br
+  out << $br
+  out << $br
+  out << "-------------------" + $br
+  out << bold("HOSTNAME: #{ENV["HOSTNAME"].to_s}")
+  out << $br
+  out << $br
+  out << "ENVIRONMENT VARIABLES"
+  out << $br
+  out << $br
+  for v in ENV
+    out << v.to_s + $br
+  end
+  response.body << pre(out)
 end
 
 after do
