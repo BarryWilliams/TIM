@@ -18,6 +18,7 @@ def startup
   full_cpu if $consumed_cpu_mode == "full"
   random_cpu if $consumed_cpu_mode == "random"
   eat_memory if $consumed_memory_mode == "unlimited"
+  $randomly_generated_data = word_wrap((0..10000000).map { rand (0..10) }.join.to_s )
 end
 
 set :bind, '0.0.0.0'
@@ -191,7 +192,7 @@ get '/ready' do
 end
 
 get '/random-data' do
-  word_wrap((0..10000000).map { rand (0..10) }.join.to_s )
+  $randomly_generated_data
 end
 
 get '/threads' do
