@@ -79,7 +79,7 @@ def braindead
   Thread.new do
     sleep 5
     Thread.list.each {|th|
-      if th.to_s.include? "reactor" || th.to_s.include? "app.rb"
+      if th.to_s.include? "reactor" or th.to_s.include? "app.rb" then
         puts "killing #{th.to_s}"
         th.kill
       end
