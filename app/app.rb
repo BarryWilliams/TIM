@@ -57,11 +57,9 @@ def eat_memory
   puts "eating memory"
   Thread.new do
     m = ["eat me"]
-    i = 0
     while true do
-      m[i] = 'munch!'
-      i = i + 100000 #about 225MB/min
-      sleep 0.20
+      m << Array.new(100000) { rand(0..1.0) }
+      sleep 0.2
     end
   end
 end
