@@ -61,7 +61,7 @@ def eat_memory
     while true do
       m[i] = 'munch!'
       i = i + 100000 #about 225MB/min
-      sleep 0.05
+      sleep 0.20
     end
   end
 end
