@@ -1,9 +1,15 @@
-require 'net/http'
+require 'faraday'
 
-$num_threads = ( ENV["NUM_THREADS"] || "20" ).to_i
-$url = ARGV[1] || ENV["URL"] || ""
+puts ARGV
+
+$num_threads = ( ENV["NUM_THREADS"] || "1" ).to_i
+$timeout =     ( ENV["TIMEOUT"]     || "1.0" ).to_f
+
+$url = ARGV[0] || ENV["URL"] || ""
 
 $num_calls = 0
+$non_200   = 0
+$num_timeouts = 0
 
 if not $url.include? "http" then
   puts "Invalid URL: #{$url.to_s}"
@@ -23,8 +29,14 @@ def make_client_thread
     i = 0
     while true do
       $num_calls += 1
-      res = Net::HTTP.get_response(URI($url))
-      puts "got response code: #{res.code.to_s}" if res.code != "200"
+      con = Faraday::Connection.new
+      con.options.timeout = $timeout
+      begin
+        r = con.get($url)
+        $non_200 += 1 if r.status != 200
+      rescue
+        $num_timeouts += 1 
+      end
     end
   }
 
@@ -35,6 +47,6 @@ end
 threads = Array.new($num_threads) { make_client_thread }
 
 while true do
-  puts $num_calls.to_s
+  puts "Calls: #{$num_calls.to_s}    Non-200: #{$non_200.to_s}    Timeouts: #{$num_timeouts}"
   sleep(1)
 end
