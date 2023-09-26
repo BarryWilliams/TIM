@@ -32,7 +32,7 @@ spec:
             cpu: 500m
             memory: 200Mi
         livenessProbe:
-          failureThreshold: 10
+          failureThreshold: 6
           httpGet:
             path: /alive
             port: 4567
@@ -40,7 +40,7 @@ spec:
           initialDelaySeconds: 60
           periodSeconds: 10
           successThreshold: 1
-          timeoutSeconds: 30
+          timeoutSeconds: 1
         ports:
         - containerPort: 4567
           name: http
