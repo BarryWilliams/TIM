@@ -8,6 +8,7 @@ $ready_mode           = ENV["READY_MODE"]           || "normal"
 $consumed_cpu_mode    = ENV["CONSUMED_CPU_MODE"]    || "minimal"
 $consumed_memory_mode = ENV["CONSUMED_MEMORY_MODE"] || "minimal"
 $html_bg_color        = ENV["HTML_BG_COLOR"]        || "white"
+$braindead            = false
 
 puts "READY_MODE = #{$ready_mode}"
 puts "CONSUMED_CPU_MODE = #{$consumed_cpu_mode}"
@@ -75,15 +76,7 @@ end
 
 def braindead
   puts "going braindead"
-  Thread.new do
-    sleep 5
-    Thread.list.each {|th|
-      if th.to_s.include? "reactor" or th.to_s.include? "app.rb" then
-        puts "killing #{th.to_s}"
-        th.kill
-      end
-    }
-  end
+  $braindead = true
 end
 
 # Formatting helpers
@@ -202,6 +195,7 @@ get '/threads' do
 end
 
 after do
+  sleep if $braindead
   out = ""
   out << $br
   out << $br
